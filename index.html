@@ -3,713 +3,525 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TwittX - Social Dashboard</title>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>HTML Basics Tutorial</title>
     <style>
+        /* CSS Styles */
         :root {
-            --primary-color: #1da1f2;
-            --dark-bg: #15202b;
-            --darker-bg: #192734;
-            --darkest-bg: #253341;
-            --light-text: #ffffff;
-            --light-gray: #8899a6;
-            --border-color: #38444d;
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --success-color: #2ecc71;
         }
-
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
+        
         body {
-            background-color: var(--dark-bg);
-            color: var(--light-text);
-            display: flex;
-            min-height: 100vh;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
         }
-
-        /* Sidebar */
-        .sidebar {
-            width: 250px;
-            padding: 20px;
-            border-right: 1px solid var(--border-color);
-            position: fixed;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .logo {
-            font-size: 28px;
-            margin-bottom: 30px;
-            color: var(--primary-color);
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 15px;
-            margin-bottom: 5px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .nav-item:hover {
-            background-color: var(--darkest-bg);
-        }
-
-        .nav-item i {
-            font-size: 24px;
-            margin-right: 15px;
-        }
-
-        .nav-item.active {
-            font-weight: bold;
-        }
-
-        .tweet-btn {
-            background-color: var(--primary-color);
+        
+        header {
+            background-color: var(--dark-color);
             color: white;
-            border: none;
-            border-radius: 30px;
-            padding: 15px;
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 20px;
-            cursor: pointer;
-            transition: background-color 0.2s;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-
-        .tweet-btn:hover {
-            background-color: #1991db;
+        
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 2rem;
         }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            margin-top: auto;
-            padding: 10px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .user-profile:hover {
-            background-color: var(--darkest-bg);
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
+        
+        nav {
             background-color: var(--primary-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        .user-info {
-            flex: 1;
-        }
-
-        .user-name {
-            font-weight: bold;
-        }
-
-        .user-handle {
-            color: var(--light-gray);
-            font-size: 14px;
-        }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            margin-left: 250px;
-            max-width: 600px;
-            border-right: 1px solid var(--border-color);
-        }
-
-        .header {
-            padding: 15px 20px;
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            background-color: rgba(21, 32, 43, 0.9);
-            backdrop-filter: blur(5px);
-            z-index: 10;
-        }
-
-        .header h2 {
-            font-size: 20px;
-        }
-
-        .tweet-box {
-            padding: 15px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .tweet-form {
-            display: flex;
-        }
-
-        .tweet-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-right: 15px;
-            background-color: var(--primary-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        .tweet-input {
-            flex: 1;
-        }
-
-        .tweet-input textarea {
-            width: 100%;
-            background: transparent;
-            border: none;
-            color: var(--light-text);
-            font-size: 20px;
-            resize: none;
-            outline: none;
-            padding: 10px 0;
-            min-height: 50px;
-        }
-
-        .tweet-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 15px;
-        }
-
-        .tweet-icons {
-            display: flex;
-        }
-
-        .tweet-icon {
-            color: var(--primary-color);
-            margin-right: 15px;
-            cursor: pointer;
-        }
-
-        .tweet-submit {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 30px;
-            padding: 10px 20px;
-            font-weight: bold;
-            cursor: pointer;
-            opacity: 0.5;
-            transition: opacity 0.2s;
-        }
-
-        .tweet-submit.active {
-            opacity: 1;
-        }
-
-        /* Feed */
-        .feed {
-            display: none;
-        }
-
-        .feed.active {
-            display: block;
-        }
-
-        .tweet {
-            padding: 15px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            transition: background-color 0.2s;
-        }
-
-        .tweet:hover {
-            background-color: var(--darker-bg);
-        }
-
-        .tweet-content {
-            flex: 1;
-        }
-
-        .tweet-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-
-        .tweet-user {
-            font-weight: bold;
-            margin-right: 5px;
-        }
-
-        .tweet-handle, .tweet-time {
-            color: var(--light-gray);
-            margin-right: 5px;
-        }
-
-        .tweet-text {
-            margin-bottom: 10px;
-            line-height: 1.4;
-        }
-
-        .tweet-actions {
-            display: flex;
-            justify-content: space-between;
-            max-width: 400px;
-        }
-
-        .tweet-action {
-            display: flex;
-            align-items: center;
-            color: var(--light-gray);
-            cursor: pointer;
-        }
-
-        .tweet-action i {
-            margin-right: 5px;
-        }
-
-        .tweet-action.like.active {
-            color: #e0245e;
-        }
-
-        .tweet-action.retweet.active {
-            color: #17bf63;
-        }
-
-        /* Right Sidebar */
-        .right-sidebar {
-            width: 350px;
-            padding: 20px;
-            position: fixed;
-            right: 0;
-            height: 100vh;
-            overflow-y: auto;
-        }
-
-        .search-box {
-            background-color: var(--darker-bg);
-            border-radius: 30px;
-            padding: 10px 15px;
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .search-box i {
-            color: var(--light-gray);
-            margin-right: 10px;
-        }
-
-        .search-box input {
-            background: transparent;
-            border: none;
-            color: var(--light-text);
-            outline: none;
-            flex: 1;
-        }
-
-        .trends, .who-to-follow {
-            background-color: var(--darker-bg);
-            border-radius: 15px;
-            margin-bottom: 20px;
-        }
-
-        .section-title {
-            padding: 15px;
-            font-size: 20px;
-            font-weight: bold;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .trend-item, .follow-item {
-            padding: 15px;
-            border-bottom: 1px solid var(--border-color);
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .trend-item:hover, .follow-item:hover {
-            background-color: var(--darkest-bg);
-        }
-
-        .trend-location, .follow-bio {
-            color: var(--light-gray);
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-
-        .trend-name {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .trend-tweets {
-            color: var(--light-gray);
-            font-size: 14px;
-        }
-
-        .follow-info {
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-
-        .follow-name {
-            font-weight: bold;
-            margin-right: 5px;
-        }
-
-        .follow-handle {
-            color: var(--light-gray);
-        }
-
-        .follow-btn {
-            background-color: var(--light-text);
-            color: var(--dark-bg);
-            border: none;
-            border-radius: 30px;
-            padding: 5px 15px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .show-more {
-            padding: 15px;
-            color: var(--primary-color);
-            cursor: pointer;
-        }
-
-        /* Auth Modal */
-        .auth-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .auth-modal.active {
-            display: flex;
-        }
-
-        .auth-container {
-            background-color: var(--darker-bg);
-            border-radius: 15px;
-            width: 400px;
-            max-width: 90%;
-            padding: 30px;
-            position: relative;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: none;
-            color: var(--light-gray);
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        .auth-title {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        .auth-form {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .auth-input {
-            background-color: var(--dark-bg);
-            border: 1px solid var(--border-color);
             border-radius: 5px;
-            padding: 15px;
-            margin-bottom: 15px;
-            color: var(--light-text);
-            outline: none;
+            margin-bottom: 2rem;
         }
-
-        .auth-input:focus {
-            border-color: var(--primary-color);
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            flex-wrap: wrap;
         }
-
-        .auth-btn {
+        
+        nav ul li {
+            flex: 1;
+            text-align: center;
+        }
+        
+        nav ul li a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        nav ul li a:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .active {
+            background-color: var(--secondary-color);
+            font-weight: bold;
+        }
+        
+        section {
+            background-color: white;
+            border-radius: 5px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: none;
+        }
+        
+        section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h1, h2, h3 {
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+        }
+        
+        h2 {
+            font-size: 2rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            margin-top: 1.5rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        pre {
+            background-color: var(--light-color);
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            color: var(--dark-color);
+        }
+        
+        .example {
+            background-color: var(--light-color);
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            border: 1px dashed var(--primary-color);
+        }
+        
+        .btn {
+            display: inline-block;
             background-color: var(--primary-color);
             color: white;
+            padding: 0.5rem 1rem;
             border: none;
-            border-radius: 30px;
-            padding: 15px;
-            font-weight: bold;
+            border-radius: 5px;
             cursor: pointer;
-            margin-top: 10px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
         }
-
-        .auth-switch {
-            color: var(--primary-color);
-            text-align: center;
-            margin-top: 20px;
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        .quiz-container {
+            margin-top: 1.5rem;
+        }
+        
+        .quiz-question {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background-color: var(--light-color);
+            border-radius: 5px;
+        }
+        
+        .quiz-options {
+            margin-left: 1.5rem;
+        }
+        
+        .quiz-options label {
+            display: block;
+            margin-bottom: 0.5rem;
             cursor: pointer;
         }
-
-        .error-message {
-            color: #e0245e;
-            margin-bottom: 15px;
+        
+        .quiz-result {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .correct {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        footer {
             text-align: center;
+            padding: 1.5rem;
+            background-color: var(--dark-color);
+            color: white;
+            margin-top: 2rem;
         }
-
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .right-sidebar {
-                display: none;
+        
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
             }
-        }
-
-        @media (max-width: 900px) {
-            .sidebar {
-                width: 80px;
-                align-items: center;
-            }
-            .nav-item span {
-                display: none;
-            }
-            .nav-item i {
-                margin-right: 0;
-                font-size: 20px;
-            }
-            .tweet-btn {
-                width: 40px;
-                height: 40px;
-                padding: 0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 50%;
-            }
-            .tweet-btn span {
-                display: none;
-            }
-            .user-info {
-                display: none;
-            }
-            .main-content {
-                margin-left: 80px;
-            }
-        }
-
-        @media (max-width: 500px) {
-            .sidebar {
-                display: none;
-            }
-            .main-content {
-                margin-left: 0;
+            
+            .container {
+                padding: 0 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Left Sidebar -->
-    <div class="sidebar">
-        <div class="logo">
-            <i class="fab fa-twitter"></i>
-        </div>
-        <div class="nav-item active" data-page="home">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-        </div>
-        <div class="nav-item" data-page="explore">
-            <i class="fas fa-hashtag"></i>
-            <span>Explore</span>
-        </div>
-        <div class="nav-item" data-page="notifications">
-            <i class="fas fa-bell"></i>
-            <span>Notifications</span>
-        </div>
-        <div class="nav-item" data-page="messages">
-            <i class="fas fa-envelope"></i>
-            <span>Messages</span>
-        </div>
-        <div class="nav-item" data-page="bookmarks">
-            <i class="fas fa-bookmark"></i>
-            <span>Bookmarks</span>
-        </div>
-        <div class="nav-item" data-page="lists">
-            <i class="fas fa-list"></i>
-            <span>Lists</span>
-        </div>
-        <div class="nav-item" data-page="profile">
-            <i class="fas fa-user"></i>
-            <span>Profile</span>
-        </div>
-        <div class="nav-item" data-page="more">
-            <i class="fas fa-ellipsis-h"></i>
-            <span>More</span>
-        </div>
-        <button class="tweet-btn">
-            <span>Tweet</span>
-        </button>
-        <div class="user-profile">
-            <div class="user-avatar" id="user-avatar">U</div>
-            <div class="user-info" id="user-info">
-                <div class="user-name" id="user-name">User</div>
-                <div class="user-handle" id="user-handle">@username</div>
+    <header>
+        <h1>HTML Basics Tutorial</h1>
+        <p>Learn the fundamentals of HTML in simple steps</p>
+    </header>
+    
+    <div class="container">
+        <nav>
+            <ul>
+                <li><a href="#" class="active" data-section="intro">Introduction</a></li>
+                <li><a href="#" data-section="structure">HTML Structure</a></li>
+                <li><a href="#" data-section="elements">Basic Elements</a></li>
+                <li><a href="#" data-section="attributes">Attributes</a></li>
+                <li><a href="#" data-section="lists">Lists</a></li>
+                <li><a href="#" data-section="quiz">Quiz</a></li>
+            </ul>
+        </nav>
+        
+        <section id="intro" class="active">
+            <h2>Introduction to HTML</h2>
+            <p>HTML (HyperText Markup Language) is the standard markup language for creating web pages. It describes the structure of a web page and consists of a series of elements that tell the browser how to display content.</p>
+            
+            <h3>What is HTML?</h3>
+            <ul>
+                <li>HTML stands for HyperText Markup Language</li>
+                <li>HTML is the standard markup language for creating Web pages</li>
+                <li>HTML describes the structure of a Web page</li>
+                <li>HTML consists of a series of elements</li>
+                <li>HTML elements tell the browser how to display the content</li>
+            </ul>
+            
+            <h3>How HTML Works</h3>
+            <p>HTML documents are plain text files that contain HTML elements. These elements are represented by tags that label pieces of content such as "heading", "paragraph", "table", and so on. Browsers read these files and render them into visible or audible web pages.</p>
+            
+            <div class="example">
+                <h4>Simple HTML Example:</h4>
+                <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Page Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;My First Heading&lt;/h1&gt;
+    &lt;p&gt;My first paragraph.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
             </div>
-            <i class="fas fa-chevron-down"></i>
-        </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <div class="header">
-            <h2 id="page-title">Home</h2>
-        </div>
-
-        <!-- Tweet Box -->
-        <div class="tweet-box" id="tweet-box">
-            <div class="tweet-form">
-                <div class="tweet-avatar" id="tweet-avatar">U</div>
-                <div class="tweet-input">
-                    <textarea id="tweet-text" placeholder="What's happening?"></textarea>
-                    <div class="tweet-actions">
-                        <div class="tweet-icons">
-                            <div class="tweet-icon"><i class="fas fa-image"></i></div>
-                            <div class="tweet-icon"><i class="fas fa-poll"></i></div>
-                            <div class="tweet-icon"><i class="fas fa-smile"></i></div>
-                            <div class="tweet-icon"><i class="fas fa-calendar-alt"></i></div>
-                            <div class="tweet-icon"><i class="fas fa-map-marker-alt"></i></div>
+            
+            <a href="#" class="btn" data-section="structure">Next: HTML Structure →</a>
+        </section>
+        
+        <section id="structure">
+            <h2>HTML Document Structure</h2>
+            <p>Every HTML document has a basic structure that must be followed. This structure ensures that browsers can properly interpret and display the content.</p>
+            
+            <h3>Basic HTML Document Structure</h3>
+            <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Document Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;!-- Content goes here --&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            
+            <h3>Key Components:</h3>
+            <ul>
+                <li><strong>&lt;!DOCTYPE html&gt;</strong> - Declares the document type and HTML version</li>
+                <li><strong>&lt;html&gt;</strong> - The root element of an HTML page</li>
+                <li><strong>&lt;head&gt;</strong> - Contains meta information about the document</li>
+                <li><strong>&lt;title&gt;</strong> - Specifies a title for the document</li>
+                <li><strong>&lt;body&gt;</strong> - Contains the visible page content</li>
+            </ul>
+            
+            <div class="example">
+                <h4>Live Example:</h4>
+                <p>This is what the basic structure looks like when rendered:</p>
+                <div style="border:1px solid #ccc; padding:10px;">
+                    <h1 style="margin:0;">Document Title</h1>
+                    <p>Content goes here...</p>
+                </div>
+            </div>
+            
+            <a href="#" class="btn" data-section="elements">Next: Basic Elements →</a>
+        </section>
+        
+        <section id="elements">
+            <h2>Basic HTML Elements</h2>
+            <p>HTML elements are the building blocks of HTML pages. Each element can have attributes and contains content between its opening and closing tags.</p>
+            
+            <h3>Common HTML Elements</h3>
+            
+            <h4>Headings</h4>
+            <p>HTML headings are defined with the &lt;h1&gt; to &lt;h6&gt; tags:</p>
+            <pre><code>&lt;h1&gt;This is heading 1&lt;/h1&gt;
+&lt;h2&gt;This is heading 2&lt;/h2&gt;
+&lt;h3&gt;This is heading 3&lt;/h3&gt;
+&lt;h4&gt;This is heading 4&lt;/h4&gt;
+&lt;h5&gt;This is heading 5&lt;/h5&gt;
+&lt;h6&gt;This is heading 6&lt;/h6&gt;</code></pre>
+            
+            <h4>Paragraphs</h4>
+            <p>The &lt;p&gt; tag defines a paragraph:</p>
+            <pre><code>&lt;p&gt;This is a paragraph.&lt;/p&gt;
+&lt;p&gt;This is another paragraph.&lt;/p&gt;</code></pre>
+            
+            <h4>Links</h4>
+            <p>The &lt;a&gt; tag defines a hyperlink:</p>
+            <pre><code>&lt;a href="https://www.example.com"&gt;This is a link&lt;/a&gt;</code></pre>
+            
+            <h4>Images</h4>
+            <p>The &lt;img&gt; tag defines an image (though we're not using images in this tutorial):</p>
+            <pre><code>&lt;img src="image.jpg" alt="Description of image"&gt;</code></pre>
+            
+            <h4>Line Breaks</h4>
+            <p>The &lt;br&gt; tag inserts a single line break:</p>
+            <pre><code>&lt;p&gt;This is&lt;br&gt;a line&lt;br&gt;break example.&lt;/p&gt;</code></pre>
+            
+            <a href="#" class="btn" data-section="attributes">Next: HTML Attributes →</a>
+        </section>
+        
+        <section id="attributes">
+            <h2>HTML Attributes</h2>
+            <p>Attributes provide additional information about HTML elements. They are always specified in the start tag and usually come in name/value pairs like: name="value".</p>
+            
+            <h3>Common Attributes</h3>
+            
+            <h4>The href Attribute</h4>
+            <p>The &lt;a&gt; tag defines a hyperlink. The href attribute specifies the URL of the page the link goes to:</p>
+            <pre><code>&lt;a href="https://www.example.com"&gt;Visit Example.com&lt;/a&gt;</code></pre>
+            
+            <h4>The src Attribute</h4>
+            <p>The &lt;img&gt; tag is used to embed an image. The src attribute specifies the path to the image:</p>
+            <pre><code>&lt;img src="picture.jpg"&gt;</code></pre>
+            
+            <h4>The alt Attribute</h4>
+            <p>The alt attribute provides alternative text for an image:</p>
+            <pre><code>&lt;img src="picture.jpg" alt="A beautiful landscape"&gt;</code></pre>
+            
+            <h4>The style Attribute</h4>
+            <p>The style attribute is used to add styles to an element, such as color, font, size, etc:</p>
+            <pre><code>&lt;p style="color:red;"&gt;This is a red paragraph.&lt;/p&gt;</code></pre>
+            
+            <h4>The class and id Attributes</h4>
+            <p>These attributes are used for styling and JavaScript:</p>
+            <pre><code>&lt;p class="intro" id="first-paragraph"&gt;This is an introduction.&lt;/p&gt;</code></pre>
+            
+            <div class="example">
+                <h4>Attribute Example:</h4>
+                <p style="color: blue; font-weight: bold;">This paragraph is styled with the style attribute.</p>
+                <p><a href="#" style="text-decoration: none; color: green;">This link has custom styling</a></p>
+            </div>
+            
+            <a href="#" class="btn" data-section="lists">Next: HTML Lists →</a>
+        </section>
+        
+        <section id="lists">
+            <h2>HTML Lists</h2>
+            <p>HTML lists allow web developers to group a set of related items in lists. There are three types of lists in HTML:</p>
+            
+            <h3>Unordered Lists</h3>
+            <p>An unordered list starts with the &lt;ul&gt; tag. Each list item starts with the &lt;li&gt; tag:</p>
+            <pre><code>&lt;ul&gt;
+    &lt;li&gt;Coffee&lt;/li&gt;
+    &lt;li&gt;Tea&lt;/li&gt;
+    &lt;li&gt;Milk&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+            
+            <div class="example">
+                <h4>Result:</h4>
+                <ul style="margin-left: 20px;">
+                    <li>Coffee</li>
+                    <li>Tea</li>
+                    <li>Milk</li>
+                </ul>
+            </div>
+            
+            <h3>Ordered Lists</h3>
+            <p>An ordered list starts with the &lt;ol&gt; tag. Each list item starts with the &lt;li&gt; tag:</p>
+            <pre><code>&lt;ol&gt;
+    &lt;li&gt;First item&lt;/li&gt;
+    &lt;li&gt;Second item&lt;/li&gt;
+    &lt;li&gt;Third item&lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+            
+            <div class="example">
+                <h4>Result:</h4>
+                <ol style="margin-left: 20px;">
+                    <li>First item</li>
+                    <li>Second item</li>
+                    <li>Third item</li>
+                </ol>
+            </div>
+            
+            <h3>Description Lists</h3>
+            <p>A description list is a list of terms, with a description of each term:</p>
+            <pre><code>&lt;dl&gt;
+    &lt;dt&gt;Coffee&lt;/dt&gt;
+    &lt;dd&gt;- black hot drink&lt;/dd&gt;
+    &lt;dt&gt;Milk&lt;/dt&gt;
+    &lt;dd&gt;- white cold drink&lt;/dd&gt;
+&lt;/dl&gt;</code></pre>
+            
+            <div class="example">
+                <h4>Result:</h4>
+                <dl style="margin-left: 20px;">
+                    <dt>Coffee</dt>
+                    <dd>- black hot drink</dd>
+                    <dt>Milk</dt>
+                    <dd>- white cold drink</dd>
+                </dl>
+            </div>
+            
+            <a href="#" class="btn" data-section="quiz">Test Your Knowledge →</a>
+        </section>
+        
+        <section id="quiz">
+            <h2>HTML Basics Quiz</h2>
+            <p>Test your understanding of HTML basics with this short quiz. Select the correct answers and check your results at the end.</p>
+            
+            <div class="quiz-container">
+                <form id="htmlQuiz">
+                    <div class="quiz-question">
+                        <h3>1. What does HTML stand for?</h3>
+                        <div class="quiz-options">
+                            <label><input type="radio" name="q1" value="a"> Hyperlinks and Text Markup Language</label>
+                            <label><input type="radio" name="q1" value="b"> Hyper Text Markup Language</label>
+                            <label><input type="radio" name="q1" value="c"> Home Tool Markup Language</label>
                         </div>
-                        <button class="tweet-submit" id="tweet-submit" disabled>Tweet</button>
                     </div>
+                    
+                    <div class="quiz-question">
+                        <h3>2. What is the correct HTML element for the largest heading?</h3>
+                        <div class="quiz-options">
+                            <label><input type="radio" name="q2" value="a"> &lt;heading&gt;</label>
+                            <label><input type="radio" name="q2" value="b"> &lt;h6&gt;</label>
+                            <label><input type="radio" name="q2" value="c"> &lt;h1&gt;</label>
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-question">
+                        <h3>3. What is the correct HTML for creating a hyperlink?</h3>
+                        <div class="quiz-options">
+                            <label><input type="radio" name="q3" value="a"> &lt;a url="http://www.example.com"&gt;Example&lt;/a&gt;</label>
+                            <label><input type="radio" name="q3" value="b"> &lt;a href="http://www.example.com"&gt;Example&lt;/a&gt;</label>
+                            <label><input type="radio" name="q3" value="c"> &lt;a&gt;http://www.example.com&lt;/a&gt;</label>
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-question">
+                        <h3>4. Which HTML attribute specifies an alternate text for an image?</h3>
+                        <div class="quiz-options">
+                            <label><input type="radio" name="q4" value="a"> src</label>
+                            <label><input type="radio" name="q4" value="b"> alt</label>
+                            <label><input type="radio" name="q4" value="c"> title</label>
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-question">
+                        <h3>5. Which HTML element defines the structure of an HTML document?</h3>
+                        <div class="quiz-options">
+                            <label><input type="radio" name="q5" value="a"> &lt;body&gt;</label>
+                            <label><input type="radio" name="q5" value="b"> &lt;html&gt;</label>
+                            <label><input type="radio" name="q5" value="c"> &lt;head&gt;</label>
+                        </div>
+                    </div>
+                    
+                    <button type="button" id="submitQuiz" class="btn btn-success">Submit Quiz</button>
+                </form>
+                
+                <div id="quizResult" class="quiz-result" style="display: none;">
+                    <h3>Your Results</h3>
+                    <p id="scoreText"></p>
+                    <p id="feedback"></p>
+                    <button type="button" id="retakeQuiz" class="btn">Retake Quiz</button>
                 </div>
             </div>
-        </div>
-
-        <!-- Feed -->
-        <div class="feed active" id="home-feed">
-            <!-- Tweets will be loaded here -->
-        </div>
-
-        <div class="feed" id="explore-feed">
-            <div class="section-title">Explore</div>
-            <!-- Explore content will be loaded here -->
-        </div>
-
-        <div class="feed" id="notifications-feed">
-            <div class="section-title">Notifications</div>
-            <!-- Notifications will be loaded here -->
-        </div>
-
-        <div class="feed" id="profile-feed">
-            <div class="section-title">Profile</div>
-            <!-- Profile content will be loaded here -->
-        </div>
+            
+            <a href="#" class="btn" data-section="intro">← Back to Beginning</a>
+        </section>
     </div>
-
-    <!-- Right Sidebar -->
-    <div class="right-sidebar">
-        <div class="search-box">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search TwittX">
-        </div>
-
-        <div class="trends">
-            <div class="section-title">Trends for you</div>
-            <div class="trend-item">
-                <div class="trend-location">Trending in Technology</div>
-                <div class="trend-name">#WebDevelopment</div>
-                <div class="trend-tweets">15.2K Tweets</div>
-            </div>
-            <div class="trend-item">
-                <div class="trend-location">Trending worldwide</div>
-                <div class="trend-name">#NewTech</div>
-                <div class="trend-tweets">125K Tweets</div>
-            </div>
-            <div class="trend-item">
-                <div class="trend-location">Business & finance</div>
-                <div class="trend-name">Stocks</div>
-                <div class="trend-tweets">32.1K Tweets</div>
-            </div>
-            <div class="show-more">Show more</div>
-        </div>
-
-        <div class="who-to-follow">
-            <div class="section-title">Who to follow</div>
-            <div class="follow-item">
-                <div class="follow-info">
-                    <div class="follow-name">Tech News</div>
-                    <div class="follow-handle">@technews</div>
-                </div>
-                <div class="follow-bio">The latest in technology and innovation</div>
-                <button class="follow-btn">Follow</button>
-            </div>
-            <div class="follow-item">
-                <div class="follow-info">
-                    <div class="follow-name">Web Dev</div>
-                    <div class="follow-handle">@webdev</div>
-                </div>
-                <div class="follow-bio">Resources for web developers</div>
-                <button class="follow-btn">Follow</button>
-            </div>
-            <div class="show-more">Show more</div>
-        </div>
-    </div>
-
-    <!-- Auth Modal -->
-    <div class="auth-modal" id="auth-modal">
-        <div class="auth-container">
-            <button class="close-btn" id="close-auth">&times;</button>
-            <div class="auth-title" id="auth-title">Sign in to TwittX</div>
-            <div class="error-message" id="auth-error"></div>
-            <form class="auth-form" id="auth-form">
-                <input type="email" class="auth-input" id="auth-email" placeholder="Email" required>
-                <input type="password" class="auth-input" id="auth-password" placeholder="Password" required>
-                <button type="submit" class="auth-btn" id="auth-submit">Sign in</button>
-            </form>
-            <div class="auth-switch" id="auth-switch">Don't have an account? Sign up</div>
-        </div>
-    </div>
-
+    
+    <footer>
+        <p>&copy; 2023 HTML Basics Tutorial. All rights reserved.</p>
+    </footer>
+    
     <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyD2XQ0Q0Q0Q0Q0Q0Q0Q0Q0Q0Q0Q0Q0Q0Q0",
-            authDomain: "twittx-dashboard.firebaseapp.com",
-            databaseURL: "https://twittx-dashboard-default-rtdb.firebaseio.com",
-            projectId: "twittx-dashboard",
-            storageBucket: "twittx-dashboard.appspot.com",
-            messagingSenderId: "123456789012",
-            appId: "1:123456789012:web:abcdefghijklmnopqrstuv"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const database = firebase.database();
-
-        // DOM Elements
-        co
+        // JavaScript for the tutorial website
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navigation between sections
+            const navLinks = document.querySelectorAll('nav a, .btn[data-section]');
+            const sections = document.querySelectorAll('section');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Get the target section ID
+                    const t
